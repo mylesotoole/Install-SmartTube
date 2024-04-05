@@ -8,7 +8,7 @@
 ### How it works:
 
 - Connects to your Android TV via the ADB feature in Android Platform Tools.
-- Commands are sent to your Android TV to disable Amazon bloatware and optimize performance.
+- Downloads latest SmartTube release from GitHub and pushes it to your Android TV..
 
 <hr>
 
