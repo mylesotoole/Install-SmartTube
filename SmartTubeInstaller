@@ -1,0 +1,84 @@
+#!/bin/sh
+Debloat() {
+
+  # CHECK IF IT CAN BE REACHED BY ABD
+  clear
+  if adb get-state 1>/dev/null 2>&1; then
+
+    # NOTIFY CHANGES
+    clear
+    printf "[2] Installing SmartTube:\n\n"
+
+    # DOWNLOAD SMARTUBE
+    curl -OL https://github.com/yuliskov/SmartTube/releases/download/latest/smarttube_stable.apk
+
+    # INSTALL ON FIRE TV
+    adb install smarttube_stable.apk
+
+    # REMOVE FILE FROM COMPUTER
+    rm -f smarttube_stable.apk
+
+    # NOTIFY COMPLETION
+    sleep 1
+    printf "\n[3] Install Completed\n\n"
+    sleep 1
+    clear
+
+  else
+    # IT FAILED, TELL REMEDY AND PROMPT RETRY
+    printf "[Error] Fire TV is not reachable, please confirm:\n\n"
+    printf "  - ADB debugging is enabled on the Android TV\n"
+    printf "  - This is the IP address of the Android TV\n\n"
+    read -p "Press any key to try again: " -n 1 -s key
+    Main
+  fi
+}
+
+Main() {
+  # CHECK IF HOMEBREW IS INSTALLED, IF NOT ASK TO INSTALL IT
+  which -s brew
+  if [[ $? != 0 ]]; then
+    clear
+    printf "[Error] Homebrew is not installed, please continue with its installation and then rerun the script:\n\n"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    Main
+  else
+    # CHECK IF ANDROID PLATFORM TOOLS IS INSTALLED, IF NOT INSTALL IT
+    if brew list | grep "android-platform-tools" >/dev/null 2>&1; then
+      # CLEAR CURRENT CONNECTIONS
+      adb disconnect
+      clear
+
+      # ASK FOR IP
+
+      printf "╔═════════════════════════════╗\n"
+      printf "║     SmartTube Installer     ║\n"
+      printf "╚═════════════════════════════╝\n\n"
+
+      printf "[1] Enter your Android TV's IP Address: "
+      read ip1
+
+      # CHECK IF HOST IS ONLINE, IF SO TRY AND CONNECT
+      if
+        ping -c 1 "$ip1" >/dev/null 2>&1
+      then
+        adb connect $ip1:5555
+        Debloat
+      else
+        # IT FAILED, TELL REMEDY AND PROMPT RETRY
+        clear
+        printf "[Error] This IP address is not reachable, please confirm that:\n\n"
+        printf "  - Both devices are on the same network\n"
+        printf "  - The IP address is typed correctly\n\n"
+        read -p "Press any key to try again: " -n 1 -s key
+        Main
+      fi
+    else
+      # INSTALL ANDROID PLATFORM TOOLS, AND RESTART THE SCRIPT
+      brew install --cask android-platform-tools
+      Main
+    fi
+  fi
+}
+
+Main
