@@ -8,7 +8,7 @@
 ### How it works:
 
 - Connects to your Android TV via the ADB feature in Android Platform Tools.
-- Downloads latest SmartTube release from GitHub and pushes it to your Android TV..
+- Downloads latest SmartTube release from GitHub and pushes it to your Android TV.
 
 <hr>
 
