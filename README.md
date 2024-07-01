@@ -1,7 +1,7 @@
 ### Running on macOS
 
-1. Make the script executable `chmod +x SmartTubeInstaller`.
-2. Run it with `./SmartTubeInstaller`.
+1. Make the script executable `chmod +x Install-SmartTube`.
+2. Run it with `./Install-SmartTube`.
 
 <hr>
 
